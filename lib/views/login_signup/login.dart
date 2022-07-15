@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:notelify/constants/constant_styles.dart';
+import 'package:get/get.dart';
+import 'package:notelify/constants/kimages.dart';
+import 'package:notelify/constants/kstyles.dart';
+import 'package:notelify/controllers/user_controller.dart';
+import 'package:notelify/utils/custom_navigator.dart';
 import 'package:notelify/utils/textfield_validations.dart';
+import 'package:notelify/views/dashboard/dashboard.dart';
+import 'package:notelify/views/login_signup/signup.dart';
 import 'package:notelify/widgets/custom_textfield.dart';
 import 'package:notelify/widgets/vertical_space.dart';
 
@@ -16,12 +22,14 @@ class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: SingleChildScrollView(
           physics: const ClampingScrollPhysics(),
           child: Container(
             margin: EdgeInsets.symmetric(horizontal: 24.w),
             child: Column(
+              mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 VerticalSpace(40.h),
@@ -35,10 +43,12 @@ class Login extends StatelessWidget {
                 ),
                 Text(
                   "Sign in to continue!",
-                  style: TextStyle(
-                      fontSize: 20.sp, color: ConstantStyle.greyColor),
+                  style: TextStyle(fontSize: 20.sp, color: KStyle.greyColor),
                 ),
-                VerticalSpace(80.h),
+                VerticalSpace(20.h),
+                Image.asset(
+                  KImages.loginImage,
+                ),
                 Form(
                   key: _formKey,
                   child: Column(
@@ -47,6 +57,7 @@ class Login extends StatelessWidget {
                         isTextFormField: true,
                         floatingLabelText: "Email ID",
                         textEditingController: emailTextEditingController,
+                        textInputAction: TextInputAction.next,
                         validation: (val) => TextFieldValidations.instance
                             .emailValidations(val!),
                       ),
@@ -56,6 +67,8 @@ class Login extends StatelessWidget {
                         floatingLabelText: "Password",
                         maskText: true,
                         textEditingController: passwordTextEditingController,
+                        validation: (val) => TextFieldValidations.instance
+                            .passwordValidations(val!),
                       ),
                       VerticalSpace(10.h),
                       Row(
@@ -68,8 +81,19 @@ class Login extends StatelessWidget {
                         ],
                       ),
                       VerticalSpace(40.h),
-                      GestureDetector(
-                        child: Container(
+                      GetBuilder<UserController>(builder: (userController) {
+                        return GestureDetector(
+                          onTap: () async {
+                            if (_formKey.currentState!.validate()) {
+                              if (await userController.loginUser(
+                                  emailTextEditingController.text,
+                                  passwordTextEditingController.text)) {
+                                CustomNavigator.instance
+                                    .replace(context, const Dashboard());
+                              }
+                            }
+                          },
+                          child: Container(
                             width: MediaQuery.of(context).size.width,
                             padding: EdgeInsets.symmetric(vertical: 15.h),
                             alignment: Alignment.center,
@@ -83,10 +107,45 @@ class Login extends StatelessWidget {
                                     Color(0XFFFCAB8E)
                                   ]),
                             ),
-                            child: const Text(
-                              "Login",
-                              style: TextStyle(color: Colors.white),
-                            )),
+                            child: userController.isUserLoading
+                                ? SizedBox(
+                                    height: 15.h,
+                                    width: 15.w,
+                                    child: CircularProgressIndicator(
+                                      color: Colors.white,
+                                      strokeWidth: 2.sp,
+                                    ),
+                                  )
+                                : Text(
+                                    "Login",
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 15.sp),
+                                  ),
+                          ),
+                        );
+                      }),
+                    ],
+                  ),
+                ),
+                VerticalSpace(40.h),
+                Center(
+                  child: Wrap(
+                    spacing: 2.w,
+                    children: [
+                      const Text(
+                        "Don't have an account?",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          CustomNavigator.instance.replace(context, SignUp());
+                        },
+                        child: const Text(
+                          "Sign Up",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFFFA578E)),
+                        ),
                       ),
                     ],
                   ),

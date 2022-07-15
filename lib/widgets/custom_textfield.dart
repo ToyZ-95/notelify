@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:notelify/constants/constant_styles.dart';
+import 'package:notelify/constants/kstyles.dart';
 
 class CustomTextField extends StatelessWidget {
   CustomTextField({
@@ -10,6 +10,7 @@ class CustomTextField extends StatelessWidget {
     this.textEditingController,
     this.isTextFormField = false,
     this.validation,
+    this.textInputAction = TextInputAction.done,
   }) : super(key: key);
 
   bool isTextFormField;
@@ -17,6 +18,7 @@ class CustomTextField extends StatelessWidget {
   bool maskText;
   TextEditingController? textEditingController;
   Function(String?)? validation;
+  TextInputAction textInputAction;
 
   @override
   Widget build(BuildContext context) {
@@ -27,20 +29,22 @@ class CustomTextField extends StatelessWidget {
 
   TextField createCustomTextField() {
     return TextField(
-      cursorColor: ConstantStyle.pinkColor,
+      cursorColor: KStyle.pinkColor,
+      enableInteractiveSelection: true,
       obscureText: maskText,
+      textInputAction: textInputAction,
       controller: textEditingController,
       decoration: InputDecoration(
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: ConstantStyle.greyColor, width: 1.5),
+          borderSide: BorderSide(color: KStyle.greyColor, width: 1.5),
           borderRadius: BorderRadius.circular(10.r),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: ConstantStyle.pinkColor, width: 1.5),
+          borderSide: BorderSide(color: KStyle.pinkColor, width: 1.5),
           borderRadius: BorderRadius.circular(10.r),
         ),
         labelText: floatingLabelText,
-        labelStyle: TextStyle(color: ConstantStyle.greyColor),
+        labelStyle: TextStyle(color: KStyle.greyColor),
         floatingLabelBehavior: FloatingLabelBehavior.always,
         contentPadding: EdgeInsets.only(left: 20.w),
       ),
@@ -49,20 +53,30 @@ class CustomTextField extends StatelessWidget {
 
   TextFormField createCustomTextFormField() {
     return TextFormField(
-      cursorColor: ConstantStyle.pinkColor,
+      cursorColor: KStyle.pinkColor,
+      enableInteractiveSelection: true,
+      textInputAction: textInputAction,
       obscureText: maskText,
       controller: textEditingController,
       decoration: InputDecoration(
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: ConstantStyle.greyColor, width: 1.5),
+          borderSide: BorderSide(color: KStyle.greyColor, width: 1.5),
           borderRadius: BorderRadius.circular(10.r),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: ConstantStyle.pinkColor, width: 1.5),
+          borderSide: BorderSide(color: KStyle.pinkColor, width: 1.5),
+          borderRadius: BorderRadius.circular(10.r),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Colors.redAccent, width: 1.5),
+          borderRadius: BorderRadius.circular(10.r),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: KStyle.pinkColor, width: 1.5),
           borderRadius: BorderRadius.circular(10.r),
         ),
         labelText: floatingLabelText,
-        labelStyle: TextStyle(color: ConstantStyle.greyColor),
+        labelStyle: TextStyle(color: KStyle.greyColor),
         floatingLabelBehavior: FloatingLabelBehavior.always,
         contentPadding: EdgeInsets.only(left: 20.w),
       ),
