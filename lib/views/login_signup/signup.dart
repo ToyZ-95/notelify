@@ -5,9 +5,10 @@ import 'package:notelify/constants/kimages.dart';
 import 'package:notelify/constants/kstyles.dart';
 import 'package:notelify/controllers/user_controller.dart';
 import 'package:notelify/utils/custom_navigator.dart';
+import 'package:notelify/utils/snack_messages.dart';
 import 'package:notelify/utils/textfield_validations.dart';
-import 'package:notelify/views/dashboard/dashboard.dart';
 import 'package:notelify/views/login_signup/login.dart';
+import 'package:notelify/views/verify_email/verify_email.dart';
 import 'package:notelify/widgets/custom_textfield.dart';
 import 'package:notelify/widgets/vertical_space.dart';
 
@@ -104,7 +105,7 @@ class SignUp extends StatelessWidget {
                                   passwordTextEditingController.text,
                                   fullNameTextEditingController.text)) {
                                 CustomNavigator.instance
-                                    .replace(context, const Dashboard());
+                                    .replace(context, const VerifyEmail());
                               }
                             }
                           },

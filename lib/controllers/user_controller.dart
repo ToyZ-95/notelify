@@ -21,6 +21,11 @@ class UserController extends GetxController {
       isUserLoading = false;
       update();
 
+      if (!FirebaseAuth.instance.currentUser!.emailVerified) {
+        SnackMessages.showError("User is not verified!!");
+        return false;
+      }
+
       return true;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
@@ -51,6 +56,8 @@ class UserController extends GetxController {
       isUserLoading = false;
       update();
 
+      await sendVerificationEmail();
+
       return true;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
@@ -67,6 +74,17 @@ class UserController extends GetxController {
       SnackMessages.showError(e.toString());
     }
     return false;
+  }
+
+  Future<void> sendVerificationEmail({bool showSnackMessage = false}) async {
+    try {
+      await FirebaseAuth.instance.currentUser!.sendEmailVerification();
+      if (showSnackMessage) {
+        SnackMessages.showError("Verification Email Sent!");
+      }
+    } catch (e) {
+      SnackMessages.showError(e.toString());
+    }
   }
 
   listenUserChanges() {

@@ -23,4 +23,21 @@ class SnackMessages {
       ),
     );
   }
+
+  static showSuccess(String message) {
+    Get.snackbar(
+      "",
+      "",
+      isDismissible: true,
+      snackPosition: SnackPosition.BOTTOM,
+      padding: _snackbarPadding,
+      borderRadius: 5.r,
+      duration: const Duration(seconds: 2),
+      backgroundColor: Colors.green,
+      titleText: Text(
+        message,
+        style: TextStyle(fontSize: 16.sp, color: Colors.white),
+      ),
+    );
+  }
 }
