@@ -40,6 +40,42 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:329270570788:android:6242688ec99c690dd2cdb1",
+        "android_client_info": {
+          "package_name": "com.example.wallify_fetcher"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "329270570788-194bk4pf21lra2lr361u920efbajmi9e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBdw6QYVk3eweB11H3YzS8Xt_bj8JzeJy0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "329270570788-194bk4pf21lra2lr361u920efbajmi9e.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "329270570788-6hgf5nd7qbi7i8kcuraq8hrs05s14u4b.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.bitskraft.notelify"
+              }
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"
