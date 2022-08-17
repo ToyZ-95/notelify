@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:notelify/config/custom_theme.dart';
 import 'package:notelify/controllers/user_controller.dart';
+import 'package:notelify/firebase_options.dart';
 import 'package:notelify/views/dashboard/dashboard.dart';
 import 'package:notelify/views/login_signup/login.dart';
 
@@ -12,7 +13,7 @@ bool goToHomePage = false;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   Get.put(UserController());
   if (FirebaseAuth.instance.currentUser != null &&
