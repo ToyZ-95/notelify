@@ -15,7 +15,6 @@ void main() async {
   await Firebase.initializeApp();
 
   Get.put(UserController());
-
   if (FirebaseAuth.instance.currentUser != null &&
       FirebaseAuth.instance.currentUser!.emailVerified) {
     goToHomePage = true;
@@ -32,10 +31,10 @@ class MyApp extends StatelessWidget {
     return ScreenUtilInit(
       designSize: const Size(360, 690),
       builder: (BuildContext context, Widget? child) {
-        return GetMaterialApp(
+        return MaterialApp(
           debugShowCheckedModeBanner: false,
           theme: CustomTheme.lightTheme,
-          home: goToHomePage ? const Dashboard() : Login(),
+          home: goToHomePage ? Dashboard() : Login(),
         );
       },
     );

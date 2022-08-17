@@ -89,7 +89,7 @@ class Login extends StatelessWidget {
                                   emailTextEditingController.text,
                                   passwordTextEditingController.text)) {
                                 CustomNavigator.instance
-                                    .replace(context, const Dashboard());
+                                    .replace(context, Dashboard());
                               }
                             }
                           },
