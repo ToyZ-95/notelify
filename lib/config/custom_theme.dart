@@ -8,7 +8,7 @@ class CustomTheme {
         fontFamily: GoogleFonts.archivo().fontFamily,
         textTheme: TextTheme(
           headline2: TextStyle(
-            color: Colors.white,
+            color: Colors.black,
             fontWeight: FontWeight.w500,
             fontSize: 24.sp,
           ),

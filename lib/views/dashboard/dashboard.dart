@@ -1,8 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:notelify/constants/kimages.dart';
 import 'package:notelify/controllers/wallpapers_controller.dart';
 import 'package:notelify/widgets/vertical_space.dart';
 
@@ -16,59 +16,61 @@ class Dashboard extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text("Wallify"),
-      ),
-      body: SingleChildScrollView(
-        physics: const ClampingScrollPhysics(),
-        child: GetBuilder<WallpapersController>(
-          builder: (wallpapersController) {
-            if (this.wallpapersController.isLoading) {
-              return const CircularProgressIndicator.adaptive();
-            }
-
-            return Container(
-              margin: EdgeInsets.symmetric(horizontal: 24.w),
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Welcome",
-                    style:
-                        TextStyle(fontWeight: FontWeight.w700, fontSize: 26.sp),
-                  ),
-                  VerticalSpace(40.h),
-                  Text(
-                    FirebaseAuth.instance.currentUser!.displayName!,
-                    style:
-                        TextStyle(fontWeight: FontWeight.w700, fontSize: 26.sp),
-                  ),
-                ],
-              ),
-            );
-          },
+        elevation: 1.0,
+        automaticallyImplyLeading: false,
+        leading: const Icon(
+          Icons.menu,
+          color: Colors.black,
         ),
+        title: const Text(
+          "Wallify",
+          style: TextStyle(color: Colors.black),
+        ),
+        backgroundColor: const Color(0xffFAFAFA),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          wallpapersController.getWallpapersByCategory();
-
-          // final first =
-          //     FirebaseFirestore.instance.collection("Popular").limit(10);
-
-          // first.get().then((documentSnapshots) {
-          //   log("abcd");
-          //   for (var doc in documentSnapshots.docs) {
-          //     var data = doc.data();
-          //     UnsplashWallpaperModel unsplashWallpaperModel =
-          //         UnsplashWallpaperModel.fromJson(data);
-          //     log(unsplashWallpaperModel.urls!.full!);
-          //   }
-          // });
-
-          //log(first.toString());
+      body: GetBuilder<WallpapersController>(
+        builder: (wallpapersController) {
+          if (wallpapersController.isLoading &&
+              wallpapersController.wallpapers.isEmpty) {
+            return SizedBox(
+              height: MediaQuery.of(context).size.height,
+              child: const Center(child: CircularProgressIndicator()),
+            );
+          }
+          return GridView.builder(
+            controller: wallpapersController.scrollController,
+            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 200,
+              childAspectRatio: 1 / 2,
+              crossAxisSpacing: 20,
+              mainAxisSpacing: 20,
+            ),
+            itemCount: wallpapersController.wallpapers.length,
+            itemBuilder: (BuildContext ctx, index) {
+              return Container(
+                margin: const EdgeInsets.all(8),
+                decoration:
+                    BoxDecoration(borderRadius: BorderRadius.circular(15)),
+                child: CachedNetworkImage(
+                  imageUrl: wallpapersController.wallpapers[index].urls!.thumb!,
+                  height: 400.h,
+                  fit: BoxFit.cover,
+                  progressIndicatorBuilder: (context, url, downloadProgress) =>
+                      Center(
+                    child: SizedBox(
+                      height: 20.h,
+                      width: 20.w,
+                      child: CircularProgressIndicator(
+                        value: downloadProgress.progress,
+                      ),
+                    ),
+                  ),
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                ),
+              );
+            },
+          );
         },
-        child: const Icon(Icons.add),
       ),
       drawer: Drawer(
         child: SingleChildScrollView(
@@ -79,13 +81,13 @@ class Dashboard extends StatelessWidget {
               DrawerHeader(
                 margin: EdgeInsets.zero,
                 padding: EdgeInsets.zero,
-                decoration: BoxDecoration(
-                  border: const BorderDirectional(
+                decoration: const BoxDecoration(
+                  border: BorderDirectional(
                     bottom: BorderSide(color: Colors.grey, width: 0.5),
                   ),
-                  image: DecorationImage(
-                      image: AssetImage(KImages.drawerHeaderImage),
-                      fit: BoxFit.fill),
+                  // image: DecorationImage(
+                  //     image: AssetImage(KImages.drawerHeaderImage),
+                  //     fit: BoxFit.fill),
                 ),
                 child: SizedBox(
                   width: MediaQuery.of(context).size.width,
