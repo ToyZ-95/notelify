@@ -7,7 +7,11 @@ import 'package:notelify/services/wallpapers_service.dart';
 class WallpapersController extends GetxController {
   bool isLoading = false;
 
-  List<UnsplashWallpaperModel> wallpapers = [];
+  List<String> categories = [];
+  //List<UnsplashWallpaperModel> wallpapers = [];
+
+  Map<String, List<UnsplashWallpaperModel>> wallpapers = {};
+
   ScrollController? scrollController;
 
   String selectedCategory = "Popular";
@@ -27,6 +31,8 @@ class WallpapersController extends GetxController {
         await getWallpapersByCategory();
       }
     });
+    getCategoriesList();
+
     getWallpapersByCategory();
   }
 
@@ -34,6 +40,18 @@ class WallpapersController extends GetxController {
   void dispose() {
     super.dispose();
     scrollController?.dispose();
+  }
+
+  getCategoriesList() async {
+    final QuerySnapshot<Map<String, dynamic>> res =
+        await WallpapersService.instance.getCategoriesList();
+
+    if (res.docs.isNotEmpty) {
+      for (var doc in res.docs) {
+        categories.add(doc.id);
+        // wallpapers[doc.id] = [];
+      }
+    }
   }
 
   getWallpapersByCategory({String category = "Popular"}) async {
@@ -44,9 +62,14 @@ class WallpapersController extends GetxController {
 
     if (res != null && res.docs.isNotEmpty) {
       lastVisible = res.docs[res.size - 1];
-
+      List<UnsplashWallpaperModel> walls = [];
       for (var doc in res.docs) {
-        wallpapers.add(UnsplashWallpaperModel.fromJson(doc.data()));
+        walls.add(UnsplashWallpaperModel.fromJson(doc.data()));
+      }
+      if (wallpapers[category] != null) {
+        wallpapers[category]!.addAll(walls);
+      } else {
+        wallpapers[category] = walls;
       }
     }
 
