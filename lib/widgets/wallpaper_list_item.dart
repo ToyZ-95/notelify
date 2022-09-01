@@ -17,7 +17,7 @@ class WallpaperListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 10.h, horizontal: 20.w),
+      margin: EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.w),
       decoration:
           BoxDecoration(borderRadius: BorderRadius.circular(10.r), boxShadow: [
         BoxShadow(
@@ -35,26 +35,25 @@ class WallpaperListItem extends StatelessWidget {
               .urls!
               .regular!,
           fit: BoxFit.fill,
-          progressIndicatorBuilder: (context, url, downloadProgress) => Center(
-            child: CachedNetworkImage(
-              imageUrl: wallpapersController
-                  .wallpapers[wallpapersController.categories[categoryIndex]]![
-                      imageIndexInList]
-                  .urls!
-                  .thumb!,
-              fit: BoxFit.cover,
-              progressIndicatorBuilder: (context, url, downloadProgress) =>
-                  Center(
-                child: SizedBox(
-                  height: 20.h,
-                  width: 20.w,
-                  child: CircularProgressIndicator(
-                    value: downloadProgress.progress,
-                  ),
+          progressIndicatorBuilder: (context, url, downloadProgress) =>
+              CachedNetworkImage(
+            imageUrl: wallpapersController
+                .wallpapers[wallpapersController.categories[categoryIndex]]![
+                    imageIndexInList]
+                .urls!
+                .thumb!,
+            fit: BoxFit.fill,
+            progressIndicatorBuilder: (context, url, downloadProgress) =>
+                Center(
+              child: SizedBox(
+                height: 20.h,
+                width: 20.w,
+                child: CircularProgressIndicator(
+                  value: downloadProgress.progress,
                 ),
               ),
-              errorWidget: (context, url, error) => const Icon(Icons.error),
             ),
+            errorWidget: (context, url, error) => const Icon(Icons.error),
           ),
           errorWidget: (context, url, error) => const Icon(Icons.error),
         ),

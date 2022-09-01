@@ -22,9 +22,11 @@ class _DashboardState extends State<Dashboard>
       builder: (wallpapersController) {
         if (wallpapersController.isLoading &&
             wallpapersController.wallpapers.isEmpty) {
-          return SizedBox(
-            height: MediaQuery.of(context).size.height,
-            child: const Center(child: CircularProgressIndicator()),
+          return Scaffold(
+            body: SizedBox(
+              height: MediaQuery.of(context).size.height,
+              child: const Center(child: CircularProgressIndicator()),
+            ),
           );
         }
         wallpapersController.tabController ??= TabController(
@@ -66,9 +68,10 @@ class _DashboardState extends State<Dashboard>
               (index) {
                 return GridView.builder(
                   controller: wallpapersController.scrollController,
+                  padding: EdgeInsets.symmetric(horizontal: 10.w),
                   gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                     maxCrossAxisExtent: 200,
-                    childAspectRatio: 0.65,
+                    childAspectRatio: .65,
                   ),
                   itemCount: wallpapersController
                       .wallpapers[wallpapersController.categories[index]]!
