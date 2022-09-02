@@ -47,6 +47,7 @@ class _DashboardState extends State<Dashboard>
             ),
             backgroundColor: const Color(0xffFAFAFA),
             bottom: TabBar(
+              isScrollable: true,
               controller: wallpapersController.tabController,
               indicatorColor: Colors.black,
               tabs: List.generate(
