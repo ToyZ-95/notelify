@@ -54,46 +54,47 @@ class WallpapersController extends GetxController {
     scrollController?.dispose();
   }
 
-  getCategoriesList() async {
-    final QuerySnapshot<Map<String, dynamic>> res =
-        await WallpapersService.instance.getCategoriesList();
-
-    if (res.docs.isNotEmpty) {
-      for (var doc in res.docs) {
-        categories.add(doc.id);
-        if (wallpapers[doc.id] == null) {
-          wallpapers[doc.id] = [];
-          categoryWiseLastVisible[doc.id] = null;
-          getWallpapersByCategory(category: doc.id);
+  getCategoriesList() {
+    WallpapersService.instance.getCategoriesList().then((res) {
+      if (res.docs.isNotEmpty) {
+        for (var doc in res.docs) {
+          categories.add(doc.id);
+          if (wallpapers[doc.id] == null) {
+            wallpapers[doc.id] = [];
+            categoryWiseLastVisible[doc.id] = null;
+            getWallpapersByCategory(category: doc.id);
+          }
         }
       }
-    }
-    update();
+      update();
+    });
   }
 
-  getWallpapersByCategory({String category = "Popular"}) async {
+  getWallpapersByCategory({String category = "Popular"}) {
     isLoading = true;
     update();
-    final QuerySnapshot<Map<String, dynamic>>? res =
-        await WallpapersService.instance.getWallpapersByCategory(
+
+    WallpapersService.instance
+        .getWallpapersByCategory(
             category: category,
-            lastVisibleDoc: categoryWiseLastVisible[category]);
+            lastVisibleDoc: categoryWiseLastVisible[category])
+        .then((res) {
+      if (res != null && res.docs.isNotEmpty) {
+        categoryWiseLastVisible[category] = res.docs[res.size - 1];
 
-    if (res != null && res.docs.isNotEmpty) {
-      categoryWiseLastVisible[category] = res.docs[res.size - 1];
-
-      List<UnsplashWallpaperModel> walls = [];
-      for (var doc in res.docs) {
-        walls.add(UnsplashWallpaperModel.fromJson(doc.data()));
+        List<UnsplashWallpaperModel> walls = [];
+        for (var doc in res.docs) {
+          walls.add(UnsplashWallpaperModel.fromJson(doc.data()));
+        }
+        if (wallpapers[category] != null) {
+          wallpapers[category]!.addAll(walls);
+        } else {
+          wallpapers[category] = walls;
+        }
       }
-      if (wallpapers[category] != null) {
-        wallpapers[category]!.addAll(walls);
-      } else {
-        wallpapers[category] = walls;
-      }
-    }
 
-    isLoading = false;
-    update();
+      isLoading = false;
+      update();
+    });
   }
 }

@@ -9,9 +9,10 @@ class CustomNavigator {
     return _customNavigator ?? CustomNavigator._();
   }
 
-  to(BuildContext context, Widget nextScreen) {
+  to(BuildContext context, Widget nextScreen, Function? exitScreenCallback) {
     Navigator.push(context,
-        MaterialPageRoute(builder: (BuildContext context) => nextScreen));
+            MaterialPageRoute(builder: (BuildContext context) => nextScreen))
+        .then((value) => exitScreenCallback?.call());
   }
 
   replace(BuildContext context, Widget nextScreen) {
