@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:notelify/services/dio_methods.dart';
+import 'package:notelify/services/endpoints.dart';
 
 class WallpapersService {
   WallpapersService._();
@@ -39,5 +41,16 @@ class WallpapersService {
       log(e.toString());
     }
     return null;
+  }
+
+  Future<dynamic> getWallpapersFromUnsplashAPI(
+      {String orderBy = "Latest"}) async {
+    final res =
+        await DioMethods.instance.get(endPoint: EndPoints.baseUrl, params: {
+      "count": 50,
+      "order_by": orderBy,
+      "client_id": "U6TxVg_fifGSpPtgLQ48WzpK0NJvI4ent__LyGl0KhU"
+    });
+    return res.data;
   }
 }

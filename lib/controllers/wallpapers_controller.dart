@@ -84,17 +84,39 @@ class WallpapersController extends GetxController {
 
         List<UnsplashWallpaperModel> walls = [];
         for (var doc in res.docs) {
-          walls.add(UnsplashWallpaperModel.fromJson(doc.data()));
-        }
-        if (wallpapers[category] != null) {
-          wallpapers[category]!.addAll(walls);
-        } else {
-          wallpapers[category] = walls;
+          createUnsplashWallpaperModelAndAddToList(
+              data: doc.data(), category: category);
         }
       }
 
       isLoading = false;
       update();
     });
+  }
+
+  getWallpapersFromUnsplashAPI({String orderBy = "Latest"}) async {
+    isLoading = true;
+    update();
+    await WallpapersService.instance
+        .getWallpapersFromUnsplashAPI(orderBy: orderBy)
+        .then((res) {
+      for (var data in res) {
+        createUnsplashWallpaperModelAndAddToList(data: data, category: orderBy);
+      }
+      isLoading = false;
+      update();
+    });
+  }
+
+  createUnsplashWallpaperModelAndAddToList(
+      {required Map<String, dynamic> data, required String category}) {
+    UnsplashWallpaperModel unsplashWallpaperModel =
+        UnsplashWallpaperModel.fromJson(data);
+
+    if (wallpapers[category] != null) {
+      wallpapers[category]!.add(unsplashWallpaperModel);
+    } else {
+      wallpapers[category] = [unsplashWallpaperModel];
+    }
   }
 }

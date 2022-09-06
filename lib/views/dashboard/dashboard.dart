@@ -18,6 +18,8 @@ class _DashboardState extends State<Dashboard>
 
   @override
   Widget build(BuildContext context) {
+    TextTheme textTheme = Theme.of(context).textTheme;
+
     return GetBuilder<WallpapersController>(
       builder: (wallpapersController) {
         if (wallpapersController.isLoading &&
@@ -30,7 +32,9 @@ class _DashboardState extends State<Dashboard>
           );
         }
         wallpapersController.tabController ??= TabController(
-            length: wallpapersController.categories.length, vsync: this);
+            length: wallpapersController.categories.length,
+            vsync: this,
+            initialIndex: 1);
 
         return Scaffold(
           backgroundColor: Colors.white,
@@ -41,9 +45,9 @@ class _DashboardState extends State<Dashboard>
               Icons.menu,
               color: Colors.black,
             ),
-            title: const Text(
+            title: Text(
               "Wallify",
-              style: TextStyle(color: Colors.black),
+              style: textTheme.headline1,
             ),
             backgroundColor: const Color(0xffFAFAFA),
             bottom: TabBar(
@@ -51,11 +55,15 @@ class _DashboardState extends State<Dashboard>
               controller: wallpapersController.tabController,
               indicatorColor: Colors.black,
               tabs: List.generate(
-                wallpapersController.categories.length,
+                3,
                 (index) => Padding(
                   padding: EdgeInsets.symmetric(vertical: 10.h),
                   child: Text(
-                    wallpapersController.categories[index],
+                    index == 0
+                        ? "Category"
+                        : index == 1
+                            ? "Latest"
+                            : "Popular",
                     style: const TextStyle(color: Colors.black),
                   ),
                 ),
@@ -65,7 +73,7 @@ class _DashboardState extends State<Dashboard>
           body: TabBarView(
             controller: wallpapersController.tabController,
             children: List.generate(
-              wallpapersController.categories.length,
+              3,
               (index) {
                 return GridView.builder(
                   controller: wallpapersController.scrollController,
