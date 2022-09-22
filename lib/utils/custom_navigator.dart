@@ -19,4 +19,8 @@ class CustomNavigator {
     Navigator.pushReplacement(context,
         MaterialPageRoute(builder: (BuildContext context) => nextScreen));
   }
+
+  pop(BuildContext context) {
+    Navigator.pop(context);
+  }
 }

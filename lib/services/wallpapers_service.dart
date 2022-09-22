@@ -21,9 +21,10 @@ class WallpapersService {
 
   ///Fetchs wallpapers from firebase
   ///Takes WallpaperController object to get selected category, limit of page, document from where to start fetching
-  Future<QuerySnapshot<Map<String, dynamic>>?> getWallpapersByCategory(
-      {required String category,
-      QueryDocumentSnapshot<Map<String, dynamic>>? lastVisibleDoc}) async {
+  Future<QuerySnapshot<Map<String, dynamic>>?>
+      getWallpapersByCategoryFromFireBase(
+          {required String category,
+          QueryDocumentSnapshot<Map<String, dynamic>>? lastVisibleDoc}) async {
     try {
       if (lastVisibleDoc == null) {
         return await FirebaseFirestore.instance

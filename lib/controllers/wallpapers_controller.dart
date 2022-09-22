@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
@@ -29,23 +27,26 @@ class WallpapersController extends GetxController {
     super.onInit();
 
     scrollController = ScrollController();
-    scrollController!.addListener(() async {
-      try {
-        var nextPageTrigger = 0.8 * scrollController!.position.maxScrollExtent;
+    // scrollController!.addListener(() async {
+    //   try {
+    //     var nextPageTrigger = 0.8 * scrollController!.position.maxScrollExtent;
 
-        // _scrollController fetches the next paginated data when the current postion of the user on the screen has surpassed
-        if (!isLoading && scrollController!.position.pixels > nextPageTrigger) {
-          await getWallpapersByCategory(
-              category: categories[tabController!.index]);
-        }
-      } catch (e) {
-        log(e.toString());
-      }
-      // nextPageTrigger will have a value equivalent to 80% of the list size.
-    });
+    //     // _scrollController fetches the next paginated data when the current postion of the user on the screen has surpassed
+    //     if (!isLoading && scrollController!.position.pixels > nextPageTrigger) {
+    //       await getWallpapersByCategoryFireBase(
+    //           category: categories[tabController!.index]);
+    //     }
+    //   } catch (e) {
+    //     log(e.toString());
+    //   }
+    //   // nextPageTrigger will have a value equivalent to 80% of the list size.
+    // });
     getCategoriesList();
 
-    getWallpapersByCategory();
+    getWallpapersFromUnsplashAPI();
+    getWallpapersFromUnsplashAPI(orderBy: "Popular");
+
+    getWallpapersByCategoryFromFireBase();
   }
 
   @override
@@ -54,15 +55,32 @@ class WallpapersController extends GetxController {
     scrollController?.dispose();
   }
 
+  initTabController(
+      {required int initialIndex,
+      required int length,
+      required TickerProvider tickerProvider}) {
+    tabController = TabController(
+      length: 3,
+      vsync: tickerProvider,
+      initialIndex: 1,
+    );
+
+    // tabController?.addListener(() {
+    //   print("tab changed");
+    // });
+  }
+
   getCategoriesList() {
     WallpapersService.instance.getCategoriesList().then((res) {
       if (res.docs.isNotEmpty) {
         for (var doc in res.docs) {
           categories.add(doc.id);
+          //getFirstWallpaperByCategoryFromFireBase(doc.id);
+
           if (wallpapers[doc.id] == null) {
             wallpapers[doc.id] = [];
             categoryWiseLastVisible[doc.id] = null;
-            getWallpapersByCategory(category: doc.id);
+            getWallpapersByCategoryFromFireBase(category: doc.id);
           }
         }
       }
@@ -70,19 +88,18 @@ class WallpapersController extends GetxController {
     });
   }
 
-  getWallpapersByCategory({String category = "Popular"}) {
+  getWallpapersByCategoryFromFireBase({String category = "Popular"}) {
     isLoading = true;
     update();
 
     WallpapersService.instance
-        .getWallpapersByCategory(
+        .getWallpapersByCategoryFromFireBase(
             category: category,
             lastVisibleDoc: categoryWiseLastVisible[category])
         .then((res) {
       if (res != null && res.docs.isNotEmpty) {
         categoryWiseLastVisible[category] = res.docs[res.size - 1];
 
-        List<UnsplashWallpaperModel> walls = [];
         for (var doc in res.docs) {
           createUnsplashWallpaperModelAndAddToList(
               data: doc.data(), category: category);

@@ -1,9 +1,16 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:notelify/controllers/wallpapers_controller.dart';
+import 'package:notelify/models/unsplash_wallpaper_model.dart';
+import 'package:notelify/utils/custom_navigator.dart';
+import 'package:notelify/views/wallpapers_grid_by_category/wallpapers_grid_by_category.dart';
+import 'package:notelify/widgets/category_card.dart';
 import 'package:notelify/widgets/custom_drawer.dart';
-import 'package:notelify/widgets/wallpaper_list_item.dart';
+import 'package:notelify/widgets/vertical_space.dart';
+import 'package:notelify/widgets/wallpapers_grid.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -31,10 +38,14 @@ class _DashboardState extends State<Dashboard>
             ),
           );
         }
-        wallpapersController.tabController ??= TabController(
-            length: wallpapersController.categories.length,
-            vsync: this,
-            initialIndex: 1);
+
+        if (wallpapersController.tabController == null) {
+          wallpapersController.initTabController(
+            initialIndex: 1,
+            length: 3,
+            tickerProvider: this,
+          );
+        }
 
         return Scaffold(
           backgroundColor: Colors.white,
@@ -51,7 +62,7 @@ class _DashboardState extends State<Dashboard>
             ),
             backgroundColor: const Color(0xffFAFAFA),
             bottom: TabBar(
-              isScrollable: true,
+              isScrollable: false,
               controller: wallpapersController.tabController,
               indicatorColor: Colors.black,
               tabs: List.generate(
@@ -74,23 +85,65 @@ class _DashboardState extends State<Dashboard>
             controller: wallpapersController.tabController,
             children: List.generate(
               3,
-              (index) {
-                return GridView.builder(
-                  controller: wallpapersController.scrollController,
-                  padding: EdgeInsets.symmetric(horizontal: 10.w),
-                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 200,
-                    childAspectRatio: .65,
-                  ),
-                  itemCount: wallpapersController
-                      .wallpapers[wallpapersController.categories[index]]!
-                      .length,
-                  itemBuilder: (BuildContext ctx, i) {
-                    return WallpaperListItem(
-                      categoryIndex: index,
-                      imageIndexInList: i,
-                    );
-                  },
+              (int index) {
+                if (index == 0) {
+                  if (wallpapersController.isLoading) {
+                    return const SizedBox();
+                  }
+                  return SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        VerticalSpace(20.h),
+                        ...List.generate(wallpapersController.categories.length,
+                            (index) {
+                          String categoryName =
+                              wallpapersController.categories[index];
+
+                          int randomInt = Random().nextInt(wallpapersController
+                              .wallpapers[categoryName]!.length);
+
+                          return GestureDetector(
+                            behavior: HitTestBehavior.opaque,
+                            onTap: () {
+                              CustomNavigator.instance.to(
+                                  context,
+                                  WallpapersListByCategory(
+                                      categoryName: categoryName),
+                                  () {});
+                            },
+                            child: CategoryCard(
+                              textTheme: textTheme,
+                              name: categoryName,
+                              wallpaperLink: wallpapersController
+                                  .wallpapers[categoryName]![randomInt]
+                                  .urls!
+                                  .regular!,
+                            ),
+                          );
+                        }),
+                      ],
+                    ),
+                  );
+                }
+
+                List<UnsplashWallpaperModel>? wallpapersList;
+
+                if (index == 1) {
+                  if (wallpapersController.wallpapers["Latest"] == null) {
+                    return const SizedBox();
+                  } else {
+                    wallpapersList = wallpapersController.wallpapers["Latest"];
+                  }
+                } else if (index == 2) {
+                  if (wallpapersController.wallpapers["Popular"] == null) {
+                    return const SizedBox();
+                  } else {
+                    wallpapersList = wallpapersController.wallpapers["Popular"];
+                  }
+                }
+
+                return WallpapersGrid(
+                  wallpapers: wallpapersList ?? [],
                 );
               },
             ),

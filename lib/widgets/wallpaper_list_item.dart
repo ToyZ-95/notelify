@@ -8,28 +8,21 @@ import 'package:notelify/utils/custom_navigator.dart';
 import 'package:notelify/views/wallpaper_details/wallpaper_details.dart';
 
 class WallpaperListItem extends StatelessWidget {
-  WallpaperListItem(
-      {Key? key, required this.categoryIndex, required this.imageIndexInList})
+  WallpaperListItem({Key? key, required this.unsplashWallpaperModel})
       : super(key: key);
 
-  int categoryIndex;
-  int imageIndexInList;
-
   WallpapersController wallpapersController = Get.find();
-  UnsplashWallpaperModel? unsplashWallpaperModel;
+  UnsplashWallpaperModel unsplashWallpaperModel;
 
   @override
   Widget build(BuildContext context) {
-    unsplashWallpaperModel = wallpapersController.wallpapers[
-        wallpapersController.categories[categoryIndex]]![imageIndexInList];
-
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () {
         CustomNavigator.instance.to(
             context,
             WallpaperDetails(
-              unsplashWallpaperModel: unsplashWallpaperModel!,
+              unsplashWallpaperModel: unsplashWallpaperModel,
             ),
             () {});
       },
@@ -39,7 +32,7 @@ class WallpaperListItem extends StatelessWidget {
             borderRadius: BorderRadius.circular(10.r),
             boxShadow: [
               BoxShadow(
-                  offset: const Offset(-1, 1),
+                  offset: const Offset(2, 2),
                   color: Colors.black54.withOpacity(0.3),
                   spreadRadius: 0.5,
                   blurRadius: 5)
@@ -48,7 +41,7 @@ class WallpaperListItem extends StatelessWidget {
           borderRadius: BorderRadius.circular(10.r),
           child: CachedNetworkImage(
             useOldImageOnUrlChange: true,
-            imageUrl: unsplashWallpaperModel!.urls!.thumb!,
+            imageUrl: unsplashWallpaperModel.urls!.thumb!,
             fit: BoxFit.fill,
             progressIndicatorBuilder: (context, url, downloadProgress) =>
                 const SizedBox(),

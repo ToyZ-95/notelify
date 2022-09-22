@@ -9,7 +9,7 @@ class CustomTheme {
         textTheme: TextTheme(
           headline1: TextStyle(
             color: Colors.black,
-            fontSize: 25.sp,
+            fontSize: 28.sp,
             fontWeight: FontWeight.bold,
             fontFamily: GoogleFonts.courgette().fontFamily,
           ),

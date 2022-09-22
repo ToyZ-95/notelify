@@ -39,9 +39,23 @@ class _WallpaperDetailsState extends State<WallpaperDetails> {
             child: CachedNetworkImage(
               imageUrl: wallpaperDetailsController
                   .unsplashWallpaperModel!.urls!.full!,
-              fit: BoxFit.fill,
-              progressIndicatorBuilder: (context, url, downloadProgress) =>
-                  const SizedBox(),
+              fit: BoxFit.cover,
+              progressIndicatorBuilder: (context, url, downloadProgress) {
+                return Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: NetworkImage(wallpaperDetailsController
+                            .unsplashWallpaperModel!.urls!.regular!),
+                        fit: BoxFit.cover),
+                  ),
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      color: Colors.black.withOpacity(0.4),
+                      value: downloadProgress.progress,
+                    ),
+                  ),
+                );
+              },
               errorWidget: (context, url, error) => const Icon(Icons.error),
             ),
           ),
