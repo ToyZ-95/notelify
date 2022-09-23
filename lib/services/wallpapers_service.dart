@@ -45,10 +45,11 @@ class WallpapersService {
   }
 
   Future<dynamic> getWallpapersFromUnsplashAPI(
-      {String orderBy = "Latest"}) async {
+      {String orderBy = "Latest", int pageNumber = 1}) async {
     final res =
         await DioMethods.instance.get(endPoint: EndPoints.baseUrl, params: {
-      "count": 50,
+      "page": pageNumber,
+      "per_page": 50,
       "order_by": orderBy,
       "client_id": "U6TxVg_fifGSpPtgLQ48WzpK0NJvI4ent__LyGl0KhU"
     });

@@ -99,17 +99,25 @@ class _DashboardState extends State<Dashboard>
                           String categoryName =
                               wallpapersController.categories[index];
 
+                          if (wallpapersController
+                              .wallpapers[categoryName]!.isEmpty) {
+                            return const SizedBox();
+                          }
+
                           int randomInt = Random().nextInt(wallpapersController
                               .wallpapers[categoryName]!.length);
 
                           return GestureDetector(
                             behavior: HitTestBehavior.opaque,
                             onTap: () {
+                              wallpapersController.selectedCategory =
+                                  categoryName;
                               CustomNavigator.instance.to(
                                   context,
                                   WallpapersListByCategory(
-                                      categoryName: categoryName),
-                                  () {});
+                                      categoryName: categoryName), () {
+                                wallpapersController.selectedCategory = "";
+                              });
                             },
                             child: CategoryCard(
                               textTheme: textTheme,

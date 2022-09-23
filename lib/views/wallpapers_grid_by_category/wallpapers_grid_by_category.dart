@@ -15,8 +15,6 @@ class WallpapersListByCategory extends StatelessWidget {
   Widget build(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
 
-    WallpapersController wallpapersController = Get.find();
-
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
@@ -36,8 +34,12 @@ class WallpapersListByCategory extends StatelessWidget {
           style: textTheme.headline1?.copyWith(fontSize: 24.sp),
         ),
       ),
-      body: WallpapersGrid(
-        wallpapers: wallpapersController.wallpapers[categoryName] ?? [],
+      body: GetBuilder<WallpapersController>(
+        builder: (wallpapersController) {
+          return WallpapersGrid(
+            wallpapers: wallpapersController.wallpapers[categoryName] ?? [],
+          );
+        },
       ),
     );
   }
