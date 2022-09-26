@@ -1,5 +1,7 @@
-import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:dio/dio.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 
 class DioMethods {
   DioMethods._();
@@ -35,12 +37,18 @@ class DioMethods {
       );
       print(response.headers);
 
-      String fullPath = "/storage/emulated/0/Download/$photoName.png";
+      final result = await ImageGallerySaver.saveImage(
+          Uint8List.fromList(response.data),
+          quality: 60,
+          name: photoName);
+      print(result);
 
-      File file = File(fullPath);
-      var raf = file.openSync(mode: FileMode.write);
-      raf.writeFromSync(response.data);
-      await raf.close();
+      // String fullPath = "/storage/emulated/0/Download/$photoName.png";
+
+      // File file = File(fullPath);
+      // var raf = file.openSync(mode: FileMode.write);
+      // raf.writeFromSync(response.data);
+      // await raf.close();
     } catch (e) {
       print(e);
     }
