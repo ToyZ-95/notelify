@@ -16,6 +16,9 @@ class WallpaperDetailController extends GetxController {
   }
 
   Future downloadImage() async {
+    if (downloadingProgress.isNotEmpty) {
+      return;
+    }
     var status = await Permission.storage.status;
     if (status.isDenied) {
       if (await Permission.storage.request().isGranted) {

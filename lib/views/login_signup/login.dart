@@ -19,6 +19,8 @@ class Login extends StatelessWidget {
   TextEditingController emailTextEditingController = TextEditingController();
   TextEditingController passwordTextEditingController = TextEditingController();
 
+  final bool _showPassword = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,13 +64,30 @@ class Login extends StatelessWidget {
                             .emailValidations(val!),
                       ),
                       VerticalSpace(20.h),
-                      CustomTextField(
-                        isTextFormField: true,
-                        floatingLabelText: "Password",
-                        maskText: true,
-                        textEditingController: passwordTextEditingController,
-                        validation: (val) => TextFieldValidations.instance
-                            .passwordValidations(val!),
+                      GetBuilder<UserController>(
+                        builder: (userController) {
+                          return CustomTextField(
+                            isTextFormField: true,
+                            floatingLabelText: "Password",
+                            maskText:
+                                userController.showPassword ? false : true,
+                            textEditingController:
+                                passwordTextEditingController,
+                            validation: (val) => TextFieldValidations.instance
+                                .passwordValidations(val!),
+                            suffixIcon: IconButton(
+                              onPressed: () {
+                                userController.showHidePassword();
+                              },
+                              icon: Icon(
+                                userController.showPassword
+                                    ? Icons.visibility_rounded
+                                    : Icons.visibility_off_rounded,
+                                color: Colors.black,
+                              ),
+                            ),
+                          );
+                        },
                       ),
                       VerticalSpace(10.h),
                       Row(
@@ -89,7 +108,7 @@ class Login extends StatelessWidget {
                                   emailTextEditingController.text,
                                   passwordTextEditingController.text)) {
                                 CustomNavigator.instance
-                                    .replace(context, Dashboard());
+                                    .replace(context, const Dashboard());
                               }
                             }
                           },

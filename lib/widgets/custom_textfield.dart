@@ -3,15 +3,16 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:notelify/constants/kstyles.dart';
 
 class CustomTextField extends StatelessWidget {
-  CustomTextField({
-    Key? key,
-    this.floatingLabelText = "",
-    this.maskText = false,
-    this.textEditingController,
-    this.isTextFormField = false,
-    this.validation,
-    this.textInputAction = TextInputAction.done,
-  }) : super(key: key);
+  CustomTextField(
+      {Key? key,
+      this.floatingLabelText = "",
+      this.maskText = false,
+      this.textEditingController,
+      this.isTextFormField = false,
+      this.validation,
+      this.textInputAction = TextInputAction.done,
+      this.suffixIcon})
+      : super(key: key);
 
   bool isTextFormField;
   String floatingLabelText;
@@ -19,6 +20,7 @@ class CustomTextField extends StatelessWidget {
   TextEditingController? textEditingController;
   Function(String?)? validation;
   TextInputAction textInputAction;
+  Widget? suffixIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -79,6 +81,7 @@ class CustomTextField extends StatelessWidget {
         labelStyle: TextStyle(color: KStyle.greyColor),
         floatingLabelBehavior: FloatingLabelBehavior.always,
         contentPadding: EdgeInsets.only(left: 20.w),
+        suffixIcon: suffixIcon,
       ),
       validator: (val) => validation!(val),
     );

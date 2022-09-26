@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:notelify/config/custom_theme.dart';
+import 'package:notelify/controllers/theme_controller.dart';
 import 'package:notelify/controllers/user_controller.dart';
 import 'package:notelify/firebase_options.dart';
 import 'package:notelify/views/dashboard/dashboard.dart';
@@ -21,6 +22,8 @@ void main() async {
     goToHomePage = true;
   }
 
+  Get.put(ThemeController());
+
   runApp(const MyApp());
 }
 
@@ -32,10 +35,10 @@ class MyApp extends StatelessWidget {
     return ScreenUtilInit(
       designSize: const Size(360, 690),
       builder: (BuildContext context, Widget? child) {
-        return MaterialApp(
+        return GetMaterialApp(
           debugShowCheckedModeBanner: false,
           theme: CustomTheme.lightTheme,
-          home: goToHomePage ? Dashboard() : Login(),
+          home: goToHomePage ? const Dashboard() : Login(),
         );
       },
     );

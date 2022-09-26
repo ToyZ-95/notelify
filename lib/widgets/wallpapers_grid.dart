@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:notelify/controllers/theme_controller.dart';
 import 'package:notelify/controllers/wallpapers_controller.dart';
 import 'package:notelify/models/unsplash_wallpaper_model.dart';
 import 'package:notelify/widgets/wallpaper_list_item.dart';
@@ -14,6 +15,8 @@ class WallpapersGrid extends StatelessWidget {
   List<UnsplashWallpaperModel> wallpapers;
 
   WallpapersController wallpapersController = Get.find();
+
+  ThemeController themeController = Get.find();
 
   @override
   Widget build(BuildContext context) {

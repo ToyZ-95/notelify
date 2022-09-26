@@ -1,9 +1,10 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:notelify/controllers/theme_controller.dart';
 import 'package:notelify/controllers/wallpaper_details_controller.dart';
 import 'package:notelify/models/unsplash_wallpaper_model.dart';
+import 'package:photo_view/photo_view.dart';
 
 class WallpaperDetails extends StatefulWidget {
   UnsplashWallpaperModel unsplashWallpaperModel;
@@ -18,6 +19,8 @@ class WallpaperDetails extends StatefulWidget {
 class _WallpaperDetailsState extends State<WallpaperDetails> {
   WallpaperDetailController wallpaperDetailsController =
       Get.put(WallpaperDetailController());
+
+  ThemeController themeController = Get.find();
 
   @override
   void dispose() {
@@ -34,29 +37,37 @@ class _WallpaperDetailsState extends State<WallpaperDetails> {
       body: Stack(
         children: [
           SizedBox(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            child: CachedNetworkImage(
-              imageUrl: wallpaperDetailsController
-                  .unsplashWallpaperModel!.urls!.full!,
-              fit: BoxFit.cover,
-              progressIndicatorBuilder: (context, url, downloadProgress) {
+            child: PhotoView(
+              loadingBuilder: ((context, event) {
                 return Container(
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: NetworkImage(wallpaperDetailsController
-                            .unsplashWallpaperModel!.urls!.regular!),
-                        fit: BoxFit.cover),
-                  ),
+                  height: MediaQuery.of(context).size.height,
+                  width: MediaQuery.of(context).size.width,
+                  color: themeController.darkModeEnabled
+                      ? const Color(0xff2E2E2E)
+                      : Colors.white,
                   child: Center(
-                    child: CircularProgressIndicator(
-                      color: Colors.black.withOpacity(0.4),
-                      value: downloadProgress.progress,
+                    child: SizedBox(
+                      height: 20.h,
+                      width: 20.w,
+                      child: CircularProgressIndicator(
+                        color: themeController.darkModeEnabled
+                            ? Colors.white
+                            : const Color(0xff2e2e2e),
+                      ),
                     ),
                   ),
                 );
-              },
-              errorWidget: (context, url, error) => const Icon(Icons.error),
+              }),
+              backgroundDecoration: BoxDecoration(
+                color: themeController.darkModeEnabled
+                    ? const Color(0xff2E2E2E)
+                    : Colors.white,
+              ),
+              initialScale: 0.15,
+              minScale: 0.1,
+              imageProvider: NetworkImage(
+                wallpaperDetailsController.unsplashWallpaperModel!.urls!.full!,
+              ),
             ),
           ),
           Positioned(

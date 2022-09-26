@@ -4,6 +4,7 @@ import 'package:notelify/utils/snack_messages.dart';
 
 class UserController extends GetxController {
   bool isUserLoading = false;
+  bool showPassword = false;
 
   @override
   void onInit() {
@@ -95,5 +96,10 @@ class UserController extends GetxController {
         print('User is signed in!');
       }
     });
+  }
+
+  showHidePassword() {
+    showPassword = !showPassword;
+    update();
   }
 }
