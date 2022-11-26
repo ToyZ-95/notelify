@@ -21,7 +21,6 @@ class UserController extends GetxController {
           .signInWithEmailAndPassword(email: email, password: password);
       isUserLoading = false;
       update();
-
       if (!FirebaseAuth.instance.currentUser!.emailVerified) {
         SnackMessages.showError("User is not verified!!");
         return false;
